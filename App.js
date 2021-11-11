@@ -1,36 +1,54 @@
 // import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React,{Component} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import * as firebase from 'firebase';
-// import firebase from "firebase/app"
-const firebaseConfig = {
-  apiKey: "AIzaSyACmDUBXa-L5-hRew9JYwtHbRefj19ANjc",
-  authDomain: "instagram-dev-be67f.firebaseapp.com",
-  projectId: "instagram-dev-be67f",
-  storageBucket: "instagram-dev-be67f.appspot.com",
-  messagingSenderId: "65439395486",
-  appId: "1:65439395486:web:3a33866ae0ec10225c958f",
-  measurementId: "G-406YYPD17B"
-};
-
-
-  firebase.initializeApp(firebaseConfig)
-
+import firebase from './firebase'
 
 import LandingScreen from "./src/component/auth/landing";
 import RegisterScreen from "./src/component/auth/Register"
 import LoginScreen from "./src/component/auth/login"
 
 const Stack = createStackNavigator();
-export default function App() {
+export class App extends Component {
+
+  constructor(props){
+    super(props)
+    this.state ={
+      loaded:false
+    }
+  }
+  componentDidMount(){
+   
+    firebase.auth().onAuthStateChanged((user) =>{
+      if(!user){
+        this.setState({
+          loggedIn:false,
+          loaded:true
+        })
+
+      }else{
+        this.setState({
+          loggedIn:true,
+          loaded:true
+        })
+      }
+    })
+  }
+  render(){
+    const {loggedIn,loaded} =this.state;
+    if(!loaded){
+      return(
+        <View style={{flex:1, justifyContent:'center'}}>
+          <Text>user is loading</Text>
+        </View>
+      )
+    }
   return (
     <NavigationContainer>
-      <Text>sjk</Text>
       <Stack.Navigator initialRouteName="Landing">
         <Stack.Screen name="landing" component={LandingScreen} options={{headerShow:false}} />
         <Stack.Screen name="Register" component={RegisterScreen} />
@@ -39,6 +57,7 @@ export default function App() {
     </NavigationContainer>
     
   );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -49,3 +68,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default App
