@@ -14,7 +14,7 @@ import React,{ Component } from 'react';
          const {email,password} = this.state;
 firebase.auth().signInWithEmailAndPassword(email,password)
 .then((result) =>{
-    console.log(result)
+    console.log('result from login',result)
 })
 .catch((error) =>{
     console.log(error)
