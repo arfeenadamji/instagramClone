@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, Button, StyleSheet, Text} from 'react-native'
 
-export default function landing({navigation}) {
+export default function Landing({navigation}) {
     return (
         <View style={styles.container}>
             <Button

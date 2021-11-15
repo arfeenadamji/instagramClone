@@ -1,7 +1,8 @@
 import React,{ Component } from 'react';
  import { View, Text, StyleSheet, Button, TextInput } from "react-native"; 
  import * as firebase from "firebase"
- export class login extends Component {
+ 
+ export class Login extends Component {
      constructor(props){
          super(props);
          this.state={
@@ -80,4 +81,4 @@ firebase.auth().signInWithEmailAndPassword(email,password)
     },
   });
 
-  export default login
+  export default Login

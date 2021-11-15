@@ -7,26 +7,11 @@ import RegisterScreen from "./src/component/auth/Register"
 import LoginScreen from "./src/component/auth/login"
 import MainScreen from "./src/component/Main";
 import AddScreen from "./src/component/main/add";
+import SaveScreen from "./src/component/main/save";
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import firebase from './firebase'
-
-
-// import  * as firebase from 'firebase';
-// const firebaseConfig = {
-//   apiKey: "AIzaSyACmDUBXa-L5-hRew9JYwtHbRefj19ANjc",
-//   authDomain: "instagram-dev-be67f.firebaseapp.com",
-//   projectId: "instagram-dev-be67f",
-//   storageBucket: "instagram-dev-be67f.appspot.com",
-//   messagingSenderId: "65439395486",
-//   appId: "1:65439395486:web:3a33866ae0ec10225c958f",
-//   measurementId: "G-406YYPD17B"
-// };
-
-// if(firebase.apps.length == 0){
-//     firebase.initializeApp(firebaseConfig)
-// }
 
 import { Provider } from 'react-redux';
 import {createStore,applyMiddleware} from 'redux';
@@ -69,7 +54,8 @@ export class App extends Component {
            <NavigationContainer>
           <Stack.Navigator initialRouteName="Main">
             <Stack.Screen name="Main" component={MainScreen} options={{headerShow:false}} />
-            <Stack.Screen name="Add" component={AddScreen}/>
+            <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation}/>
+            <Stack.Screen name="Save" component={SaveScreen}/>
 
             </Stack.Navigator>
         </NavigationContainer>
@@ -78,8 +64,8 @@ export class App extends Component {
     }else if(!loggedIn){
       return (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="landing">
-            <Stack.Screen name="landing" component={LandingScreen} options={{headerShow:false}} />
+          <Stack.Navigator initialRouteName="Landing">
+            <Stack.Screen name="Landing" component={LandingScreen} options={{headerShow:false}} />
             <Stack.Screen name="Register" component={RegisterScreen} />
                 <Stack.Screen name="Login" component={LoginScreen} />
             </Stack.Navigator>

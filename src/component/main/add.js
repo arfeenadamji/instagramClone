@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity,Button,Image } from 'react-native';
 import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 
-export default function add() {
-  const [hasPermission, setHasPermission] = useState(null);
+export default function Add({navigation}) {
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [camera, setCamera] = useState(null)
 
   const [image, setImage] = useState(null);
@@ -12,9 +14,28 @@ export default function add() {
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setHasCameraPermission(status === 'granted');
+   
+      const galleryStatus = await ImagePicker.requestCameraRollPermissionsAsync();
+      setHasGalleryPermission(galleryStatus.status === 'granted');
+
     })();
   }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1,1],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
 
   const takePicture = async() =>{
     if(camera){
@@ -22,10 +43,10 @@ export default function add() {
       setImage(data.uri)
     }
   }
-  if (hasPermission === null) {
+  if (hasCameraPermission === null || hasGalleryPermission === false) {
     return <View />;
   }
-  if (hasPermission === false) {
+  if (hasCameraPermission === false || hasGalleryPermission === false) {
     return <Text>No access to camera</Text>;
   }
   return (
@@ -53,6 +74,14 @@ onPress={() =>{
 <Button 
 title="take pic"
 onPress={() =>takePicture()}
+/>
+<Button 
+title="pick Image"
+onPress={() => pickImage()}
+/>
+<Button 
+title="Save Image"
+onPress={() => navigation.navigate("Save",{image})}
 />
 {image && <Image source={{uri:image}} style={{flex:1}}/>}
     </View>
