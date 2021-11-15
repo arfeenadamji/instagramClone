@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import LandingScreen from "./src/component/auth/landing";
 import RegisterScreen from "./src/component/auth/Register"
 import LoginScreen from "./src/component/auth/login"
-import MainScreen from "./src/component/Main";
+import MainScreen from "./src//component/Main";
 import AddScreen from "./src/component/main/add";
 import SaveScreen from "./src/component/main/save";
 
@@ -18,7 +18,7 @@ import {createStore,applyMiddleware} from 'redux';
 import rootReducer from './redux/reducers';
 import thunk from 'redux-thunk';
 const store = createStore(rootReducer, applyMiddleware(thunk) )
-
+console.disableYellowBox=true
 
 const Stack = createStackNavigator();
 export class App extends Component {
@@ -53,9 +53,9 @@ export class App extends Component {
         <Provider store={store}>
            <NavigationContainer>
           <Stack.Navigator initialRouteName="Main">
-            <Stack.Screen name="Main" component={MainScreen} options={{headerShow:false}} />
+            <Stack.Screen name="Main" component={MainScreen} />
             <Stack.Screen name="Add" component={AddScreen} navigation={this.props.navigation}/>
-            <Stack.Screen name="Save" component={SaveScreen}/>
+            <Stack.Screen name="Save" component={SaveScreen} navigation={this.props.navigation}/>
 
             </Stack.Navigator>
         </NavigationContainer>
