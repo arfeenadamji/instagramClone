@@ -58,6 +58,12 @@ firebase.auth().signInWithEmailAndPassword(email,password)
       borderWidth: 1,
       padding: 10,
       marginBottom: 25,
+    },inputEmail: {
+      height: 40,
+      margin: 12,
+      borderWidth: 1,
+      padding: 10,
+      marginBottom: 25,
     },
     inputPassword: {
       height: 40,

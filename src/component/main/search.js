@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity,StyleSheet } from 'react-native';
 import * as firebase from 'firebase';
 // require('firebase/firestore')
 
@@ -23,21 +23,37 @@ export default function Search(props) {
     console.log('userssss', users)
     return (
         <View>
-            <Text>Search screen</Text>
+        <View style={{flex:1,marginTop:40,marginBottom:20,justifyContent:'center',alignItems:'center'}}>
             <TextInput
+            style={styles.inputSearch}
                 placeholder="serach iuser"
                 onChangeText={(search) => fetchUser(search)} />
+            </View>
             <FlatList
+            style={{marginLeft:24}}
                 numColumns={1}
                 horizontal={false}
                 data={users}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         onPress={() => props.navigation.navigate("Profile", { uid: item.id })}>
-                        <Text>{item.name}</Text>
+                        <Text>{item.name} {"\n"}</Text>
                     </TouchableOpacity>
                 )}
             />
         </View>
     )
 }
+const styles=StyleSheet.create({
+    inputSearch: {
+        height: 40,
+        // margin: 12,
+        borderWidth: 0.8,
+        borderColor:'gray',
+        borderRadius:10,
+        padding: 10,
+        marginBottom: 25,
+        width:'90%',
+
+      },
+})
