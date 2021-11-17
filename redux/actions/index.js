@@ -122,20 +122,17 @@ export function fetchUsersFollowingPosts(uid) {
         .get()
         .then((snapshot) => { 
           const uid = snapshot.query._.C_.path.segments[1]
-            
-            // console.log({snapshot,uid})
-
-            const user = getState()?.usersState.users.find(el => el.uid === uid);
+          const user = getState()?.usersState.users.find(el => el.uid === uid);
 
           let posts = snapshot.docs.map((doc) => {
             const data = doc.data();
             const id = doc.id;
             return { id, ...data, user };
           });
-          console.log("snapshot.docs1233", posts);
-          console.log('posts index actions',posts);
+          // console.log("snapshot.docs1233", posts);
+          // console.log('posts index actions',posts);
           dispatch({ type: USERS_POSTS_STATE_CHANGE, posts:posts, uid:uid });
-          console.log('getState()',getState());
+          // console.log('getState()',getState());
         });
     };
   }
