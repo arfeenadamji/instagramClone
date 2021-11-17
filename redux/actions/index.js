@@ -7,7 +7,8 @@ import {
 
   USERS_DATA_STATE_CHANGE,
   USERS_POSTS_STATE_CHANGE,
-  CLEAR_DATA
+  CLEAR_DATA,
+  USERS_LIKES_STATE_CHANGE
 } from "../constants/index";
 
 export function clearData(){
@@ -15,6 +16,7 @@ export function clearData(){
     dispatch({type: CLEAR_DATA})
   })
 }
+
 export function fetchUser() {
   console.log("fetch user called")
   return (dispatch) => {
@@ -111,8 +113,7 @@ export function fetchUsersData(uid,getPosts) {
     }
   };
 }
-
-export function fetchUsersFollowingPosts(uid) {
+export function fetchUsersFollowingPosts(uid,postId) {
   console.log('fun')
     return (dispatch, getState) => {
       firebase
@@ -131,10 +132,43 @@ export function fetchUsersFollowingPosts(uid) {
             const id = doc.id;
             return { id, ...data, user };
           });
-          // console.log("snapshot.docs1233", posts);
-          // console.log('posts index actions',posts);
           dispatch({ type: USERS_POSTS_STATE_CHANGE, posts:posts, uid:uid });
-          // console.log('getState()',getState());
+           });
+    };
+  }
+
+
+export function fetchUsersFollowingLikes(uid) {
+  console.log('fun')
+    return (dispatch, getState) => {
+      firebase
+        .firestore()
+        .collection("posts")
+        .doc(uid)
+        .collection("userPosts")
+        .doc(postId)
+        .collection('likes')
+        .doc(firebase.auth().currentUser.uid)
+        .onSnapshot((snapshot) => { 
+          const postId = snapshot.ZE.path.segments[3]
+          // const user = getState()?.usersState.users.find(el => el.uid === uid);
+
+          // let posts = snapshot.docs.map((doc) => {
+          //   const data = doc.data();
+          //   const id = doc.id;
+          //   return { id, ...data, user };
+          // });
+          // for(let i=0; i< posts.length;i++){
+          //   dispatch(fetchUsersFollowingLikes, uid,posts[i].id)
+          // }
+
+          let currentUserLike = false;
+          if(snapshot.exists){
+            currentUserLike = true
+          }
+          dispatch({ type: USERS_LIKES_STATE_CHANGE, postId, currentUserLike });
         });
     };
   }
+
+  
