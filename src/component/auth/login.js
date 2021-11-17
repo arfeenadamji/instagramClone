@@ -6,8 +6,8 @@ import React,{ Component } from 'react';
      constructor(props){
          super(props);
          this.state={
-             email:'',
-             password:''
+             email:'test@test.com',
+             password:'test123'
          }
          this.onSingnIn = this.onSignIn.bind(this)
      }
@@ -28,7 +28,7 @@ firebase.auth().signInWithEmailAndPassword(email,password)
       <TextInput
         placeholder="Email"
         autoCapitalize="none"
-        // value={email}
+        value={this.state.email}
         style={styles.inputEmail}
         onChangeText={(email) => this.setState({email})}
       />
@@ -36,7 +36,7 @@ firebase.auth().signInWithEmailAndPassword(email,password)
       <TextInput
         placeholder="Password"
         autoCapitalize="none"
-        // value={pass}
+        value={this.state.password}
         style={styles.inputPassword}
         onChangeText={(password) => this.setState({password})}
       />

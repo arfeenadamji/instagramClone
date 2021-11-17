@@ -1,12 +1,22 @@
 import firebase from "firebase";
 import {
   USER_STATE_CHANGE,
-  USERS_DATA_STATE_CHANGE,
   USER_POSTS_STATE_CHANGE,
   USER_FOLLOWING_STATE_CHANGE,
+
+
+  USERS_DATA_STATE_CHANGE,
+  USERS_POSTS_STATE_CHANGE,
+  CLEAR_DATA
 } from "../constants/index";
 
+export function clearData(){
+  return ((dispatch) =>{
+    dispatch({type: CLEAR_DATA})
+  })
+}
 export function fetchUser() {
+  console.log("fetch user called")
   return (dispatch) => {
     console.log("currentUser.uid", firebase.auth().currentUser);
     firebase
@@ -17,7 +27,7 @@ export function fetchUser() {
       .get()
       .then((snapshot) => {
         if (snapshot.exists) {
-          // console.log('snapshot12',snapshot.data())
+          console.log('snapshot12',snapshot.data())
           dispatch({ type: USER_STATE_CHANGE, currentUser: snapshot.data() });
         } else {
           console.log("does12312 not exists");
@@ -39,13 +49,14 @@ export function fetchUserPosts() {
         let posts = snapshot.docs.map((doc) => {
           const data = doc.data();
           const id = doc.id;
-          return { id, ...data };
+          // return { id, ...data, user };
+          return { id, ...data};
+
         });
         console.log("snapshot.docs", posts);
-        // if(snapshot.exists){
-        dispatch({ type: USER_POSTS_STATE_CHANGE, posts });
-        // }
-        // else{console.log('does not exists')}
+        // dispatch({ type: USER_POSTS_STATE_CHANGE, posts, uid });
+        dispatch({ type: USER_POSTS_STATE_CHANGE, posts});
+  
       });
   };
 }
@@ -62,15 +73,21 @@ export function fetchUserFollowing() {
           const id = doc.id;
           return id;
         });
-        console.log("snapshot.docs", following);
+        // console.log("snapshot.docs followiinf", following);
         dispatch({ type: USER_FOLLOWING_STATE_CHANGE, following });
+        for(let i=0; i<following.length; i++){
+          dispatch(fetchUsersData(following[i]));
+        }
       });
   };
 }
 
 export function fetchUsersData(uid) {
+  console.log("uid",uid)
   return (dispatch, getState) => {
-    const found = getState.usersState().users.some((el) => el.uid === uid);
+    console.log("get state",getState())
+    const found = getState()?.usersState.users.some(el => el.uid === uid);
+    console.log(found,'found')
     if (!found) {
       firebase
         .firestore()
@@ -78,10 +95,13 @@ export function fetchUsersData(uid) {
         .doc(uid)
         .get()
         .then((snapshot) => {
+          console.log("user snap",snapshot)
           if (snapshot.exists) {
             let user = snapshot.data();
             user.uid = snapshot.id;
+            console.log("user12",user)
             dispatch({ type: USERS_DATA_STATE_CHANGE, user });
+            dispatch(fetchUsersFollowingPosts(user.uid));
           } else {
             console.log("does not exists");
           }
@@ -91,6 +111,7 @@ export function fetchUsersData(uid) {
 }
 
 export function fetchUsersFollowingPosts(uid) {
+  console.log('fun')
     return (dispatch, getState) => {
       firebase
         .firestore()
@@ -100,19 +121,21 @@ export function fetchUsersFollowingPosts(uid) {
         .orderBy("creation", "asc")
         .get()
         .then((snapshot) => { 
-            const uid = snapshot.query.EP.path.segments[1];
-            console.log({snapshot,uid})
+          const uid = snapshot.query._.C_.path.segments[1]
+            
+            // console.log({snapshot,uid})
+
+            const user = getState()?.usersState.users.find(el => el.uid === uid);
 
           let posts = snapshot.docs.map((doc) => {
             const data = doc.data();
             const id = doc.id;
-            return { id, ...data };
+            return { id, ...data, user };
           });
-          console.log("snapshot.docs", posts);
-          // if(snapshot.exists){
-          dispatch({ type: USER_POSTS_STATE_CHANGE, posts });
-          // }
-          // else{console.log('does not exists')}
+          console.log("snapshot.docs1233", posts);
+          console.log('posts index actions',posts);
+          dispatch({ type: USERS_POSTS_STATE_CHANGE, posts:posts, uid:uid });
+          console.log('getState()',getState());
         });
     };
   }
