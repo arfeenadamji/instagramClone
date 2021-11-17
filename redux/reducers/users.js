@@ -2,11 +2,11 @@ import { USERS_DATA_STATE_CHANGE, USERS_POSTS_STATE_CHANGE, CLEAR_DATA } from ".
 
 const initialState = {
     users: [],
-    usersLoaded: 0
+    usersFollowingLoaded: 0
 }
 
 export default users = (state = initialState, action) => {
-    console.log('state.usersLoaded', state.usersLoaded)
+    console.log('state.usersFollowingLoaded', state.usersFollowingLoaded)
     console.log('action action', action)
     switch (action.type) {
         case USERS_DATA_STATE_CHANGE:
@@ -17,7 +17,7 @@ export default users = (state = initialState, action) => {
         case USERS_POSTS_STATE_CHANGE:
             return {
                 ...state,
-                usersLoaded: state.users.length,
+                usersFollowingLoaded: state.users.length,
                 users:
                     state.users.map(user => user.uid === action.uid ?
                         { ...user, posts: action.posts } :
@@ -27,7 +27,7 @@ export default users = (state = initialState, action) => {
             return {
                 //    initialState 
                 users: [],
-                usersLoaded: 0
+                usersFollowingLoaded: 0
             }
         default:
             return state
