@@ -8,15 +8,18 @@ function Feed(props) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    console.log('props.usersFollowingLoaded',props.usersFollowingLoaded)
+    console.log('props.following.length',props.following.length)
     if (props.usersFollowingLoaded == props.following.length && props.following.length !== 0) {
       
       props.feed.sort(function (x, y) {
         return x.creation - y.creation
       })
       setPosts(props.feed);
+      
 
     }
-    console.log(posts)
+    console.log('posts from feedd',props.feed)
   }, [props.usersFollowingLoaded, props.feed]);
   const onLikePress =(userId,postId) =>{
     firebase
@@ -105,12 +108,162 @@ const mapStateToProps = (store) => ({
 
   currentUser: store.userState.currentUser,
   posts: store.userState.posts,
-  // img:store.userState.posts.downloadURL,
   following: store.userState.following,
-  // test:store.userState,
   feed: store.usersState.feed,
   usersFollowingLoaded: store.usersState.usersFollowingLoaded
 
 });
 
 export default connect(mapStateToProps, null)(Feed);
+
+
+
+
+
+// import React, { useState, useEffect } from 'react'
+// import { StyleSheet, View, Text, Image, FlatList, Button} from 'react-native'
+
+// import firebase from 'firebase'
+
+// require('firebase/firestore')
+// import { connect } from 'react-redux'
+
+// function Feed(props) {
+//     const [posts, setPosts] = useState([]);
+    
+//     useEffect(() => {
+//         console.log('props.usersFollowingLoaded',props.usersFollowingLoaded)
+//         console.log('props.following.length',props.following.length)
+//         if(props.usersFollowingLoaded == props.following.length && props.following.lenght !==  0){
+            
+
+//             props.feed.sort(function(x,y){
+//                 return x.creation - y.creation;
+//             })
+
+//             setPosts(props.feed);
+//         }
+//         console.log('posts',posts)
+//         console.log('props.feed',props.feed)
+//     }, [props.usersFollowingLoaded, props.feed])
+
+
+//   const onLikePress = (userId, postId) => {
+//     firebase.firestore()
+//     .collection("posts")
+//     .doc(userId)
+//     .collection("userPosts")
+//     .doc(postId)
+//     .collection("likes")
+//     .doc(firebase.auth().currentUser.uid)
+//     .set({})
+//   }
+
+//   const onDislikePress = (userId, postId) => {
+//     firebase.firestore()
+//     .collection("posts")
+//     .doc(userId)
+//     .collection("userPosts")
+//     .doc(postId)
+//     .collection("likes")
+//     .doc(firebase.auth().currentUser.uid)
+//     .delete()
+//   }
+
+
+//     return (
+//         <View style={styles.container}>
+
+//             <View style={styles.containerGallery}>
+//                 <FlatList
+//                     numColumns={1}
+//                     horizontal={false}
+//                     data={posts}
+//                     renderItem={({item}) => (
+//                         <View style={styles.containerimage}>
+//                         <Text style={styles.container}>Name: {item.user.name}</Text>
+//                         <Image
+//                             style={styles.image}
+//                             source={{uri: item.downloadURL}}
+//                         />
+//                         {item.currentUserLike ?
+//                         (
+//                             <Button
+//                                 title="Dislike"
+//                                 style={styles.button1}
+//                                 onPress={() => onDislikePress(item.user.uid, item.id)}
+//                             />
+//                         )
+//                         :
+//                         (
+//                             <Button
+//                                 title="Like"
+//                                 style={styles.button1}
+//                                 onPress={() => onLikePress(item.user.uid, item.id)}
+//                             />
+//                         )
+//                         }
+//                         <Text 
+//                             style={{textAlign:"center"}}
+//                             onPress={()=> props.navigation.navigate('Comment',
+//                         { postId: item.id, uid: item.user.uid})
+//                         }
+//                             >View Comments...</Text>
+//                         </View>
+//                     )}
+                
+                
+//                 />
+            
+//             </View>
+//         </View>
+//     )
+// }
+
+// const styles = StyleSheet.create({
+//     container:{
+
+//         flex: 1,
+//         fontSize:20,
+//         marginLeft:25,
+//         marginRight:25,
+//         marginTop:30,
+        
+       
+//     },
+
+//     containerInfo:{
+
+//         margin: 20,
+//     },
+
+//     containerGallery:{
+
+//         flex:1
+//     },
+
+   
+
+//     image:{
+
+//         flex: 1,
+//         aspectRatio: 1/1,
+      
+//     },
+
+//     containerimage:{
+
+//         flex: 1/3
+//     }
+
+// })
+
+// const mapStateToProps =(store) => ({
+//     currentUser: store.userState.currentUser,
+//     following: store.userState.following,
+//     feed: store.usersState.feed,
+//     usersFollowingLoaded: store.usersState.usersFollowingLoaded,
+// })
+
+// export default connect(mapStateToProps, null)(Feed);
+
