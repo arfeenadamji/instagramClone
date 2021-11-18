@@ -89,8 +89,8 @@ export function fetchUsersData(uid,getPosts) {
   return (dispatch, getState) => {
     console.log("get state",getState())
     const found = getState()?.usersState.users.some(el => el.uid === uid);
-    console.log(found,'found')
-    if (!found) {
+    console.log('found',found)
+    
       firebase
         .firestore()
         .collection("users")
@@ -112,7 +112,7 @@ export function fetchUsersData(uid,getPosts) {
         }
     }
   };
-}
+
 export function fetchUsersFollowingPosts(uid,postId) {
   console.log('fun')
     return (dispatch, getState) => {
